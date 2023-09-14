@@ -18,7 +18,7 @@ async function createIssue(
   assignee
 ) {
   try {
-    
+
     const baseUrl = 'https://' + domain + '.atlassian.net';
 
     const data = {
@@ -48,7 +48,7 @@ async function createIssue(
       config
     );
     console.log(response, 'sjsjsj')
-    return response.data.key;
+    return response.data;
   } catch (error) {
     console.log('error', error);
     console.log(error.response.data.errors);

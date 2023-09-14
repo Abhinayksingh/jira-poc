@@ -11,12 +11,17 @@ const username = process.env.ATLASSIAN_USERNAME;
 const password = process.env.ATLASSIAN_API_KEY;
 const domain = process.env.DOMAIN;
 const cors = require('cors');
-
+const mongoose = require('mongoose')
+const url = 'mongodb://localhost:27017/issues'
 const bodyparser = require('body-parser');
 const getProjects = require('./getProject');
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(bodyparser.json());
 app.use(express.urlencoded({ extended: true }));
+
+mongoose.connect(url, {}).then(result => console.log('connected')).catch(err => console.log(err))
+const issue = mongoose.model('issue', { id: String, key: String, self: String, url: String });
+
 
 const auth = {
   username: username,
@@ -57,25 +62,39 @@ app.post('/ticket', async (req, res) => {
     projectKey,
     assignee
   );
+  console.log(issueKey, 'sjssbjb')
+  const issueModel = new issue({ id: issueKey.id, key: issueKey.key, self: issueKey.self, url: `https://vivet.atlassian.net/browse/${issueKey.key}` });
+  issueModel.save().then(() => console.log('inserted'));
   res.send('Ticket created');
 });
+
+app.get('/issue', async (req, res) => {
+  try {
+    const data = await issue.find()
+    res.send(data)
+  }
+  catch (err) {
+    rez.send('failed to get')
+    console.log(err)
+  }
+})
 
 app.get('/:key', async (req, res) => {
   const baseUrl = 'https://' + domain + '.atlassian.net';
   const config = {
-      method: 'get',
-      url: baseUrl + '/rest/api/2/issue/createmeta',
-      headers: { 'Content-Type': 'application/json' },
-      auth: auth
+    method: 'get',
+    url: baseUrl + '/rest/api/2/issue/createmeta',
+    headers: { 'Content-Type': 'application/json' },
+    auth: auth
   };
   const response = await axios.request(config);
   console.log(typeof response, response.data)
   let final;
   response.data.projects.map((item) => {
-      if (item.key === req.params.key) {
-          return final = item
-      }
-      return item
+    if (item.key === req.params.key) {
+      return final = item
+    }
+    return item
   })
   console.log("asjdhb", final)
   res.send(final)
