@@ -129,8 +129,9 @@ export const FormComponent = () => {
   return (
     <Box display="flex" justifyContent={'center'}>
       <Box mt={'20px'}>
-        <Box mb={'10px'}>Create Ticket</Box>
-        <Select
+        <Box mb={'10px'} bg='white' w='100%' p={4} color='blue'>
+          Jira Software</Box>
+        <Select mt='20px'
           placeholder="Select an Assignee"
           onChange={handleSelectChange}
           value={selectedName}
@@ -141,9 +142,9 @@ export const FormComponent = () => {
             </option>
           ))}
         </Select>
-        <form onSubmit={submitHandler}>
-          <FormControl>
-            <FormLabel>Project</FormLabel>
+        <form mt='50px' onSubmit={submitHandler}>
+          <FormControl isRequired>
+            <FormLabel mt='20px'>Project</FormLabel>
             <Input
               type="text"
               value={project}
@@ -175,21 +176,21 @@ export const FormComponent = () => {
             value={issueType}
             onChange={event => setIssueType(event.currentTarget.value)}
           /> */}
-            <FormLabel>Description</FormLabel>
+            <FormLabel mt='20px'>Description</FormLabel>
             <Input
               type="text"
               value={description}
               onChange={event => setDescription(event.currentTarget.value)}
             />
-            <Button type="submit" mt={'30px'}>
+            <Button type="submit" bg='blue' color='white' mt={'30px'}>
               Submit
             </Button>
           </FormControl>
         </form>
-        <Box mt={"50PX"}>
+        <Box mt={"50PX"} bg='white' w='100%' p={4} color='black'>
           CLICK TO VIEW LATEST TICKETS
           {url.map(option => (
-            <Box mt={"30PX"}>
+            <Box bg='white' w='100%' p={4} color='blue' mt={"10PX"}>
               <a href={option.url}>
                 {option.key}
               </a>
