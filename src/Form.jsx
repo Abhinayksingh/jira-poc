@@ -29,6 +29,7 @@ export const FormComponent = () => {
   const [selectIssueType, setSelectissueType] = useState('');
   const [issueTypeName, setIssueTypeName] = useState([]);
   const [issue, setIssue] = useState('');
+  const [url, setUrl] = useState([])
   const toast = useToast();
 
   const handleSelectChange = event => {
@@ -52,7 +53,11 @@ export const FormComponent = () => {
         url: 'http://localhost:3003/user',
         headers: { 'Content-Type': 'application/json' },
       };
-
+      const configissue = {
+        method: 'get',
+        url: 'http://localhost:3003/issue',
+        headers: { 'Content-Type': 'application/json' },
+      };
       const configIssueType = {
         method: 'get',
         url: 'http://localhost:3003/TRA',
@@ -61,7 +66,9 @@ export const FormComponent = () => {
       const response = await axios.request(config);
 
       const responseIssueType = await axios.request(configIssueType);
-      
+
+      const responseIssues = await axios.request(configissue);
+      setUrl(responseIssues.data)
 
       if (response.data) {
         setId(response.data);
@@ -84,8 +91,8 @@ export const FormComponent = () => {
   }, []);
 
   const createPost = async () => {
-    let postData ;
-    if(project && summry && issue && description && accountId){
+    let postData;
+    if (project && summry && issue && description && accountId) {
       const config = {
         headers: { 'Content-Type': 'application/json' },
       };
@@ -100,16 +107,16 @@ export const FormComponent = () => {
         },
         config
       );
-      
+
 
     }
     if (postData?.status) {
       addToast();
     }
-    
+
   };
 
- 
+
   const submitHandler = e => {
     e.preventDefault();
     setSummary('');
@@ -179,7 +186,17 @@ export const FormComponent = () => {
             </Button>
           </FormControl>
         </form>
+        <Box mt={"50PX"}>
+          CLICK TO VIEW LATEST TICKETS
+          {url.map(option => (
+            <Box mt={"30PX"}>
+              <a href={option.url}>
+                {option.key}
+              </a>
+            </Box>
+          ))}
+        </Box>
       </Box>
-    </Box>
+    </Box >
   );
 };
