@@ -13,7 +13,7 @@ const auth = {
 async function getUsers() {
 
     try {
-
+        let final = [];
         const baseUrl = 'https://' + domain + '.atlassian.net';
         console.log(baseUrl)
         const config = {
@@ -23,8 +23,14 @@ async function getUsers() {
             auth: auth
         };
         const response = await axios.request(config);
-        console.log(response.data, 'sjsjs')
-        return response.data;
+        response.data.map((item) => {
+            if (item.locale) {
+                console.log(item)
+                return final.push(item)
+            }
+            return item
+        })
+        return final;
     } catch (error) {
         console.log('error: ')
         console.log(error.response.data.errors)
